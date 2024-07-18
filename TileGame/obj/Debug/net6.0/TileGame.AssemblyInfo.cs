@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TileGame")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+42ae21b1a5fbd684296f0989451fe6f5667d5a14")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+70a1380b4d2c1f7b8e4e838bac09d91a54d3482b")]
 [assembly: System.Reflection.AssemblyProductAttribute("TileGame")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TileGame")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
