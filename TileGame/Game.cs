@@ -8,9 +8,10 @@ namespace TileGame;
 public class TileGame : Game
 {
     private GraphicsDeviceManager _graphics;
+    private Vector2 windowSize;
     private SpriteBatch _spriteBatch;
     private Player _player;
-    private Texture2D _whiteTexture;
+    private Texture2D _backgroundTexture;
 
 
     public TileGame()
@@ -19,9 +20,10 @@ public class TileGame : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
-        _graphics.PreferredBackBufferWidth = 750;
-        _graphics.PreferredBackBufferHeight = 1000;
-
+        windowSize.X = 750;
+        windowSize.Y = 1000;
+        _graphics.PreferredBackBufferWidth = (int)windowSize.X;
+        _graphics.PreferredBackBufferHeight = (int)windowSize.Y;
     }
 
     protected override void Initialize()
@@ -36,15 +38,13 @@ public class TileGame : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // Load player
-        Texture2D playerTexture = Content.Load<Texture2D>("Tick_Mark_Dark-512");
-        _player = new Player(playerTexture)
-        {
-            Position = new Vector2(100, 100) // Set initial position
-        };
+        Texture2D playerTexture = Content.Load<Texture2D>("playerTexture");
+        _player = new Player(playerTexture, windowSize);
 
-        // Initial setup of two screens
-        _whiteTexture = new Texture2D(GraphicsDevice, 1, 1);
-        _whiteTexture.SetData(new[] { Color.White });
+
+        // Initial setup of two screens, base look
+        _backgroundTexture = new Texture2D(GraphicsDevice, 1, 1);
+        _backgroundTexture.SetData(new[] { Color.White });
     }
 
     protected override void Update(GameTime gameTime)
@@ -52,7 +52,11 @@ public class TileGame : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
+        // Temporary player movement
+        var kstate = Keyboard.GetState();
+        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        _player.Move(kstate, deltaTime);
 
         base.Update(gameTime);
     }
@@ -65,18 +69,13 @@ public class TileGame : Game
         int screenHeight = GraphicsDevice.Viewport.Height;
         int halfHeight = screenHeight / 2;
 
-
-        // Drawing sprites, specifically the playersprite
         _spriteBatch.Begin();
 
-        // Draw upper rectangle (white)
-        _spriteBatch.Draw(_whiteTexture, new Rectangle(0, 0, screenWidth, halfHeight), Color.DarkGray);
-
-        // Draw lower rectangle (black)
-        _spriteBatch.Draw(_whiteTexture, new Rectangle(0, halfHeight, screenWidth, halfHeight), Color.Gray);
-
+        _spriteBatch.Draw(_backgroundTexture, new Rectangle(0, 0, screenWidth, halfHeight), Color.DarkGray);
+        _spriteBatch.Draw(_backgroundTexture, new Rectangle(0, halfHeight, screenWidth, halfHeight), Color.Gray);
 
         _player.Draw(_spriteBatch);
+
         _spriteBatch.End();
 
         base.Draw(gameTime);
