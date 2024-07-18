@@ -35,6 +35,11 @@ public class Player
         }
     }
 
+    public void Update()
+    {
+
+    }
+
     public void Move(KeyboardState input, float deltaTime)
     {
         timeSinceLastMove += deltaTime;
@@ -54,8 +59,8 @@ public class Player
                 if (input.IsKeyDown(keyAction.Key))
                 {
                     keyAction.Value();
-                    timeSinceLastMove = 0f; // Reset the move delay timer
-                    break; // Move only once per input, remove this line if you want to handle multiple keys
+                    timeSinceLastMove = 0f;
+                    break;
                 }
             }
         }
