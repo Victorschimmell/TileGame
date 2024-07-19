@@ -26,3 +26,5 @@ C:\Users\victo\Desktop\GitKraken\TileGame\TileGame\obj\Debug\net6.0\TileGame.gen
 C:\Users\victo\Desktop\GitKraken\TileGame\TileGame\obj\Debug\net6.0\ref\TileGame.dll
 C:\Users\victo\Desktop\GitKraken\TileGame\TileGame\bin\Debug\net6.0\Content\playerTexture.xnb
 C:\Users\victo\Desktop\GitKraken\TileGame\TileGame\bin\Debug\net6.0\Content\map.xnb
+C:\Users\victo\Desktop\GitKraken\TileGame\TileGame\bin\Debug\net6.0\Content\tile_1.xnb
+C:\Users\victo\Desktop\GitKraken\TileGame\TileGame\bin\Debug\net6.0\Content\HGSS_155.xnb

@@ -39,11 +39,11 @@ public class TileGame : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // Load map
-        tempTexture = Content.Load<Texture2D>("map");
+        tempTexture = Content.Load<Texture2D>("tile_1");
 
 
         // Load player
-        Texture2D playerTexture = Content.Load<Texture2D>("playerTexture");
+        Texture2D playerTexture = Content.Load<Texture2D>("HGSS_155");
         _player = new Player(playerTexture, new(0, 0));
 
 
@@ -77,8 +77,18 @@ public class TileGame : Game
         _spriteBatch.Draw(_backgroundTexture, new Rectangle(0, 0, (int)GameUtil.WindowSize.X, halfHeight), Color.DarkGray);
         _spriteBatch.Draw(_backgroundTexture, new Rectangle(0, halfHeight, (int)GameUtil.WindowSize.X, halfHeight), Color.Gray);
 
+        // Playing around with tile generation
         Vector2 pos = new(0, 0);
-        _spriteBatch.Draw(tempTexture, pos, Color.White);
+        for (int i = 0; i < GameUtil.WindowSize.X / GameUtil.TileSize; i++)
+        {
+            pos.Y = 0;
+            for (int j = 0; j < GameUtil.WindowSize.Y / 2 / GameUtil.TileSize; j++)
+            {
+                _spriteBatch.Draw(tempTexture, new Rectangle((int)pos.X, (int)pos.Y, GameUtil.TileSize, GameUtil.TileSize), Color.White);
+                pos.Y += GameUtil.TileSize;
+            }
+            pos.X += GameUtil.TileSize;
+        }
 
         _player.Draw(_spriteBatch);
 
@@ -90,6 +100,6 @@ public class TileGame : Game
     protected override void UnloadContent()
     {
         // Unload any non-ContentManager content here
-        _player.Texture.Dispose();
+        _player.Unload();
     }
 }
