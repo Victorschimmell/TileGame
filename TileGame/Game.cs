@@ -1,17 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using PlayerNamespace;
+using TileGame.Entity;
+using TileGame.Utility;
 
 namespace TileGame;
 
 public class TileGame : Game
 {
     private GraphicsDeviceManager _graphics;
-    private Vector2 windowSize;
     private SpriteBatch _spriteBatch;
     private Player _player;
     private Texture2D _backgroundTexture;
+
+
+    private Texture2D tempTexture; // To be removes
 
 
     public TileGame()
@@ -20,10 +23,8 @@ public class TileGame : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
-        windowSize.X = 750;
-        windowSize.Y = 1000;
-        _graphics.PreferredBackBufferWidth = (int)windowSize.X;
-        _graphics.PreferredBackBufferHeight = (int)windowSize.Y;
+        _graphics.PreferredBackBufferWidth = (int)GameUtil.WindowSize.X;
+        _graphics.PreferredBackBufferHeight = (int)GameUtil.WindowSize.Y;
     }
 
     protected override void Initialize()
@@ -37,9 +38,13 @@ public class TileGame : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        // Load map
+        tempTexture = Content.Load<Texture2D>("map");
+
+
         // Load player
         Texture2D playerTexture = Content.Load<Texture2D>("playerTexture");
-        _player = new Player(playerTexture, windowSize);
+        _player = new Player(playerTexture, new(0, 0));
 
 
         // Initial setup of two screens, base look
@@ -65,14 +70,15 @@ public class TileGame : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        int screenWidth = GraphicsDevice.Viewport.Width;
-        int screenHeight = GraphicsDevice.Viewport.Height;
-        int halfHeight = screenHeight / 2;
+        int halfHeight = (int)GameUtil.WindowSize.Y / 2;
 
         _spriteBatch.Begin();
 
-        _spriteBatch.Draw(_backgroundTexture, new Rectangle(0, 0, screenWidth, halfHeight), Color.DarkGray);
-        _spriteBatch.Draw(_backgroundTexture, new Rectangle(0, halfHeight, screenWidth, halfHeight), Color.Gray);
+        _spriteBatch.Draw(_backgroundTexture, new Rectangle(0, 0, (int)GameUtil.WindowSize.X, halfHeight), Color.DarkGray);
+        _spriteBatch.Draw(_backgroundTexture, new Rectangle(0, halfHeight, (int)GameUtil.WindowSize.X, halfHeight), Color.Gray);
+
+        Vector2 pos = new(0, 0);
+        _spriteBatch.Draw(tempTexture, pos, Color.White);
 
         _player.Draw(_spriteBatch);
 

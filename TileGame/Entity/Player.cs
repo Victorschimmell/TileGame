@@ -2,36 +2,30 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TileGame.Utility;
 
-namespace PlayerNamespace;
+namespace TileGame.Entity;
 
 public class Player
 {
-    private Vector2 Position;
-    private float speed { get; set; }
-    private int tileSize { get; set; }
+    private Vector2 position;
     public Texture2D Texture { get; set; }
     private bool IsVisible { get; set; }
-    // Tile size should be the the width of the window divided by 20
-    private float moveDelay = 0.1f; // Adjust the delay as needed
+    private float moveDelay = 0.1f;
     private float timeSinceLastMove = 0f;
-    private Vector2 windowSize;
 
-    public Player(Texture2D texture, Vector2 wSize)
+    public Player(Texture2D texture, Vector2 startPos)
     {
         Texture = texture;
         IsVisible = true;
-        tileSize = (int)wSize.X / 15;
-        Position = new Vector2(0, 0); //Default position
-        speed = 5f;
-        windowSize = wSize;
+        position = startPos;
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
         if (IsVisible)
         {
-            spriteBatch.Draw(Texture, Position, Color.White);
+            spriteBatch.Draw(Texture, position, Color.White);
         }
     }
 
@@ -68,38 +62,38 @@ public class Player
 
     private void moveUp()
     {
-        if (Position.Y - tileSize >= 0)
+        if (position.Y - GameUtil.TileSize >= 0)
         { // Temporary collision
-            Position.Y -= tileSize;
+            position.Y -= GameUtil.TileSize;
         }
     }
 
     private void moveDown()
     {
-        if (Position.Y + tileSize < windowSize.Y / 2)
+        if (position.Y + GameUtil.TileSize * 2 < GameUtil.WindowSize.Y / 2)
         { // Temporary collision
-            Position.Y += tileSize;
+            position.Y += GameUtil.TileSize;
         }
     }
 
     private void moveLeft()
     {
-        if (Position.X - tileSize >= 0)
+        if (position.X - GameUtil.TileSize >= 0)
         { // Temporary collision
-            Position.X -= tileSize;
+            position.X -= GameUtil.TileSize;
         }
     }
 
     private void moveRight()
     {
-        if (Position.X + tileSize < windowSize.X)
+        if (position.X + GameUtil.TileSize * 2 < GameUtil.WindowSize.X)
         { // Temporary collision
-            Position.X += tileSize;
+            position.X += GameUtil.TileSize;
         }
     }
 
-    public Vector2 GetPosition()
+    public Vector2 Getposition()
     {
-        return Position;
+        return position;
     }
 }
