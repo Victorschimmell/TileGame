@@ -28,3 +28,5 @@ C:\Users\victo\Desktop\GitKraken\TileGame\TileGame\bin\Debug\net6.0\Content\play
 C:\Users\victo\Desktop\GitKraken\TileGame\TileGame\bin\Debug\net6.0\Content\map.xnb
 C:\Users\victo\Desktop\GitKraken\TileGame\TileGame\bin\Debug\net6.0\Content\tile_1.xnb
 C:\Users\victo\Desktop\GitKraken\TileGame\TileGame\bin\Debug\net6.0\Content\HGSS_155.xnb
+C:\Users\victo\Desktop\GitKraken\TileGame\TileGame\bin\Debug\net6.0\Content\DefaultFont.xnb
+C:\Users\victo\Desktop\GitKraken\TileGame\TileGame\bin\Debug\net6.0\Content\tile_2.xnb

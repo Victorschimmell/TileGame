@@ -57,7 +57,7 @@ public class Entity
         texture.Dispose();
     }
 
-    public Vector2 Getposition()
+    public Vector2 GetPosition()
     {
         return position;
     }

@@ -12,6 +12,7 @@ public class TileGame : Game
     private SpriteBatch _spriteBatch;
     private Player _player;
     private Texture2D _backgroundTexture;
+    private SpriteFont _font;
 
 
     private Texture2D tempTexture; // To be removes
@@ -45,6 +46,7 @@ public class TileGame : Game
         // Load player
         Texture2D playerTexture = Content.Load<Texture2D>("HGSS_155");
         _player = new Player(playerTexture, new(0, 0));
+        _font = Content.Load<SpriteFont>("DefaultFont");
 
 
         // Initial setup of two screens, base look
@@ -70,12 +72,10 @@ public class TileGame : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        int halfHeight = (int)GameUtil.WindowSize.Y / 2;
-
         _spriteBatch.Begin();
 
-        _spriteBatch.Draw(_backgroundTexture, new Rectangle(0, 0, (int)GameUtil.WindowSize.X, halfHeight), Color.DarkGray);
-        _spriteBatch.Draw(_backgroundTexture, new Rectangle(0, halfHeight, (int)GameUtil.WindowSize.X, halfHeight), Color.Gray);
+        _spriteBatch.Draw(_backgroundTexture, new Rectangle(0, 0, (int)GameUtil.WindowSize.X, (int)GameUtil.WindowSize.Y / 2), Color.DarkGray);
+        _spriteBatch.Draw(_backgroundTexture, new Rectangle(0, (int)GameUtil.WindowSize.Y / 2, (int)GameUtil.WindowSize.X, (int)GameUtil.WindowSize.Y / 2), Color.Gray);
 
         // Playing around with tile generation
         Vector2 pos = new(0, 0);
@@ -91,6 +91,20 @@ public class TileGame : Game
         }
 
         _player.Draw(_spriteBatch);
+
+        // Draw players current position
+        string playerPositionText = $"Player Position: {_player.GetPosition()}";
+        Vector2 textPosition = new Vector2(10, (int)GameUtil.WindowSize.Y / 2 + 25);
+        _spriteBatch.DrawString(_font, playerPositionText, textPosition, Color.White);
+
+        string directionPositionText = $"Current direction: {_player.GetDirection()}";
+        Vector2 textPosition2 = new Vector2(10, (int)GameUtil.WindowSize.Y / 2 + 50);
+        _spriteBatch.DrawString(_font, directionPositionText, textPosition2, Color.White);
+
+        string resolutionPositionText = $"Resolution: {GameUtil.WindowSize}";
+        Vector2 textPosition3 = new Vector2(10, (int)GameUtil.WindowSize.Y / 2 + 75);
+        _spriteBatch.DrawString(_font, resolutionPositionText, textPosition3, Color.White);
+
 
         _spriteBatch.End();
 

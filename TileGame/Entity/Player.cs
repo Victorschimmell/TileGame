@@ -4,15 +4,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TileGame.Utility;
 using Tilegame.Utility.Enums;
-using System;
 
 namespace TileGame.Entity
 {
     public class Player : Entity
     {
         private float moveDelay = 0.1f;
-        private float timeSinceLastMove = 0f;
         private float timeSinceLastFrame = 0f;
+        private float keyPressDuration = 0f; // Track how long the key has been pressed
         private int currentFrame = 0;
 
         private Directions currentDirection = Directions.Down;
@@ -21,6 +20,8 @@ namespace TileGame.Entity
 
         private Vector2 targetPosition;
         private bool isMoving = false;
+
+        private Keys lastKeyPressed;
 
         public Player(Texture2D texture, Vector2 pos) : base(texture, pos)
         {
@@ -51,17 +52,15 @@ namespace TileGame.Entity
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Console.Write(Getposition());
             if (IsVisible())
             {
                 Texture2D currentTexture = animationFrames[(int)currentDirection, currentFrame];
-                spriteBatch.Draw(currentTexture, new Rectangle((int)position.X, (int)position.Y, GameUtil.TileSize, GameUtil.TileSize), Color.White);
+                spriteBatch.Draw(currentTexture, new Rectangle((int)position.X, (int)position.Y, GameUtil.PlayerSize, GameUtil.PlayerSize), Color.White);
             }
         }
 
         public void Move(KeyboardState input, float deltaTime)
         {
-            timeSinceLastMove += deltaTime;
             timeSinceLastFrame += deltaTime;
 
             if (isMoving)
@@ -79,24 +78,37 @@ namespace TileGame.Entity
             {
                 bool moved = false;
 
-                if (timeSinceLastMove >= moveDelay)
+                var keyActions = new Dictionary<Keys, System.Action>
                 {
-                    var keyActions = new Dictionary<Keys, System.Action>
-                    {
-                        { Keys.Up, () => MoveUp() },
-                        { Keys.Down, () => MoveDown() },
-                        { Keys.Left, () => MoveLeft() },
-                        { Keys.Right, () => MoveRight() }
-                    };
+                    { Keys.Up, () => ChangeDirectionAndMove(Directions.Up) },
+                    { Keys.Down, () => ChangeDirectionAndMove(Directions.Down) },
+                    { Keys.Left, () => ChangeDirectionAndMove(Directions.Left) },
+                    { Keys.Right, () => ChangeDirectionAndMove(Directions.Right) }
+                };
 
-                    foreach (var keyAction in keyActions)
+                foreach (var keyAction in keyActions)
+                {
+                    if (input.IsKeyDown(keyAction.Key))
                     {
-                        if (input.IsKeyDown(keyAction.Key))
+                        if (lastKeyPressed == keyAction.Key)
+                        {
+                            keyPressDuration += deltaTime;
+                        }
+                        else
+                        {
+                            lastKeyPressed = keyAction.Key;
+                            keyPressDuration = 0f;
+                        }
+
+                        if (keyPressDuration >= moveDelay)
                         {
                             keyAction.Value();
-                            timeSinceLastMove = 0f;
                             moved = true;
                             break;
+                        }
+                        else
+                        {
+                            ChangeDirection(keyAction.Key);
                         }
                     }
                 }
@@ -116,48 +128,67 @@ namespace TileGame.Entity
             }
         }
 
-        private void MoveUp()
+        private void ChangeDirection(Keys key)
         {
-            currentDirection = Directions.Up;
-            Vector2 newPosition = new(position.X, position.Y - GameUtil.TileSize);
-            if (newPosition.Y >= 0)
+            switch (key)
             {
-                targetPosition = newPosition;
-                isMoving = true;
+                case Keys.Up:
+                    currentDirection = Directions.Up;
+                    break;
+                case Keys.Down:
+                    currentDirection = Directions.Down;
+                    break;
+                case Keys.Left:
+                    currentDirection = Directions.Left;
+                    break;
+                case Keys.Right:
+                    currentDirection = Directions.Right;
+                    break;
             }
         }
 
-        private void MoveDown()
+        private void ChangeDirectionAndMove(Directions direction)
         {
-            currentDirection = Directions.Down;
-            Vector2 newPosition = new(position.X, position.Y + GameUtil.TileSize);
-            if (newPosition.Y < GameUtil.WindowSize.Y / 2)
+            currentDirection = direction;
+            switch (direction)
             {
-                targetPosition = newPosition;
-                isMoving = true;
+                case Directions.Up:
+                    if (position.Y - GameUtil.TileSize >= 0)
+                    {
+                        targetPosition.Y -= GameUtil.TileSize;
+                        isMoving = true;
+                    }
+                    break;
+                case Directions.Down:
+                    if (position.Y + GameUtil.PlayerSize < GameUtil.WindowSize.Y / 2)
+                    {
+                        targetPosition.Y += GameUtil.TileSize;
+                        isMoving = true;
+                    }
+                    break;
+                case Directions.Left:
+                    if (position.X - GameUtil.TileSize >= 0)
+                    {
+                        targetPosition.X -= GameUtil.TileSize;
+                        isMoving = true;
+                    }
+                    break;
+                case Directions.Right:
+                    if (position.X + GameUtil.PlayerSize < GameUtil.WindowSize.X)
+                    {
+                        targetPosition.X += GameUtil.TileSize;
+                        isMoving = true;
+                    }
+                    break;
+                default:
+                    isMoving = false;
+                    break;
             }
         }
 
-        private void MoveLeft()
+        public Directions GetDirection()
         {
-            currentDirection = Directions.Left;
-            Vector2 newPosition = new(position.X - GameUtil.TileSize, position.Y);
-            if (newPosition.X >= 0)
-            {
-                targetPosition = newPosition;
-                isMoving = true;
-            }
-        }
-
-        private void MoveRight()
-        {
-            currentDirection = Directions.Right;
-            Vector2 newPosition = new(position.X + GameUtil.TileSize, position.Y);
-            if (newPosition.X < GameUtil.WindowSize.X)
-            {
-                targetPosition = newPosition;
-                isMoving = true;
-            }
+            return currentDirection;
         }
     }
 }
